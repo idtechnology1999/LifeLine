@@ -4,7 +4,7 @@
     "slug": "Lifeline",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logo.png",
     "scheme": "lifeline",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -12,6 +12,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.oluwaseun_123.lifeline",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -30,19 +31,28 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
+          "image": "./assets/images/logo.png",
+          "imageWidth": 120,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
+          "backgroundColor": "#101828",
           "dark": {
-            "backgroundColor": "#000000"
+            "backgroundColor": "#101828"
           }
         }
-      ]
+      ],
+      "expo-secure-store",
+      "expo-location"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "565419b0-8d7e-4d0e-a49d-5f3ca334e7a9"
+      }
+    },
+    "owner": "oluwaseun_123"
   }
 }

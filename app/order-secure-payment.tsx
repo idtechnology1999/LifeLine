@@ -3,15 +3,15 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   Platform,
 } from 'react-native';
 import { Feather, Ionicons, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 export default function OrderSecurePaymentScreen() {
   const insets = useSafeAreaInsets();
@@ -45,10 +45,9 @@ export default function OrderSecurePaymentScreen() {
         <Text style={styles.sectionTitle}>Payment Method</Text>
 
         <View style={styles.methodsList}>
-          <TouchableOpacity
+          <AnimatedPressable
             style={[styles.methodCard, selectedMethod === 'card' && styles.selectedMethodCard]}
             onPress={() => setSelectedMethod('card')}
-            activeOpacity={0.8}
           >
             <View style={styles.methodLeft}>
               <View style={[styles.methodIconWrapper, { backgroundColor: '#2563EB' }]}>
@@ -60,12 +59,11 @@ export default function OrderSecurePaymentScreen() {
               </View>
             </View>
             {selectedMethod === 'card' && <Ionicons name="checkmark-circle" size={22} color="#2563EB" />}
-          </TouchableOpacity>
+          </AnimatedPressable>
 
-          <TouchableOpacity
+          <AnimatedPressable
             style={[styles.methodCard, selectedMethod === 'bank' && styles.selectedMethodCard]}
             onPress={() => setSelectedMethod('bank')}
-            activeOpacity={0.8}
           >
             <View style={styles.methodLeft}>
               <View style={styles.methodIconWrapper}>
@@ -74,12 +72,11 @@ export default function OrderSecurePaymentScreen() {
               <Text style={styles.methodName}>Bank Transfer</Text>
             </View>
             {selectedMethod === 'bank' && <Ionicons name="checkmark-circle" size={22} color="#2563EB" />}
-          </TouchableOpacity>
+          </AnimatedPressable>
 
-          <TouchableOpacity
+          <AnimatedPressable
             style={[styles.methodCard, selectedMethod === 'ussd' && styles.selectedMethodCard]}
             onPress={() => setSelectedMethod('ussd')}
-            activeOpacity={0.8}
           >
             <View style={styles.methodLeft}>
               <View style={styles.methodIconWrapper}>
@@ -88,11 +85,11 @@ export default function OrderSecurePaymentScreen() {
               <Text style={styles.methodName}>USSD Code</Text>
             </View>
             {selectedMethod === 'ussd' && <Ionicons name="checkmark-circle" size={22} color="#2563EB" />}
-          </TouchableOpacity>
+          </AnimatedPressable>
 
-          <TouchableOpacity style={styles.addMethodBtn} activeOpacity={0.7}>
+          <AnimatedPressable style={styles.addMethodBtn}>
             <Text style={styles.addMethodText}>+ Add New Payment Method</Text>
-          </TouchableOpacity>
+          </AnimatedPressable>
         </View>
 
         <View style={styles.securityNoticeCard}>
@@ -105,16 +102,15 @@ export default function OrderSecurePaymentScreen() {
           </View>
         </View>
 
-        <TouchableOpacity
+        <AnimatedPressable
           style={[styles.confirmBtn, isProcessing && styles.confirmBtnDisabled]}
-          activeOpacity={0.85}
           onPress={handleConfirm}
           disabled={isProcessing}
         >
           <Text style={styles.confirmBtnText}>
             {isProcessing ? 'Processing…' : 'Confirm Payment – N13,300'}
           </Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
 
         <Text style={styles.termsNote}>By confirming, you agree to our terms of service</Text>
       </ScrollView>

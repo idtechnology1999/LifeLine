@@ -3,12 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   Dimensions,
   Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { router, useLocalSearchParams } from 'expo-router';
 
 const { width } = Dimensions.get('window');
@@ -72,12 +72,12 @@ export default function AmbulanceTrackingScreen() {
               </View>
             </View>
 
-            <TouchableOpacity style={styles.callBtn} onPress={() => {}}>
+            <AnimatedPressable style={styles.callBtn} onPress={() => {}}>
               <Ionicons name="call" size={18} color="#16A34A" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.msgBtn} onPress={() => {}}>
+            </AnimatedPressable>
+            <AnimatedPressable style={styles.msgBtn} onPress={() => {}}>
               <Ionicons name="chatbubble" size={18} color="#3B82F6" />
-            </TouchableOpacity>
+            </AnimatedPressable>
           </View>
 
           <View style={styles.divider} />
@@ -125,14 +125,14 @@ export default function AmbulanceTrackingScreen() {
           <Text style={styles.emergencyValue}>{emergencyType}</Text>
         </View>
 
-        <TouchableOpacity style={styles.shareBtn} onPress={() => {}}>
+        <AnimatedPressable style={styles.shareBtn} onPress={() => {}}>
           <Ionicons name="navigate-outline" size={18} color="#0F172A" />
           <Text style={styles.shareText}>Share Live Location</Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
 
-        <TouchableOpacity style={styles.cancelBtn} onPress={() => router.back()}>
+        <AnimatedPressable style={styles.cancelBtn} onPress={() => router.back()}>
           <Text style={styles.cancelText}>Cancel Request</Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
       </View>
     </View>
   );

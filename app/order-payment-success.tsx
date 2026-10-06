@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions, Pressable, Platform } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, withDelay, withTiming, Easing } from 'react-native-reanimated';
-import Svg, { Path } from 'react-native-svg';
 import { Ionicons } from '@expo/vector-icons';
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { router, useLocalSearchParams } from 'expo-router';
 
 const { width } = Dimensions.get('window');
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 export default function OrderPaymentSuccessScreen() {
   const params = useLocalSearchParams();
@@ -38,9 +38,7 @@ export default function OrderPaymentSuccessScreen() {
       <View style={styles.content}>
         <Animated.View style={[styles.iconCircle, circleStyle]}>
           <Animated.View style={checkStyle}>
-            <Svg width={56} height={56} viewBox="0 0 24 24" fill="none">
-              <Path d="M5 13l4 4L19 7" stroke="#1FA855" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
-            </Svg>
+            <Ionicons name={isSupplies ? 'bag-check' : 'medkit'} size={48} color="#1FA855" />
           </Animated.View>
         </Animated.View>
 
@@ -52,15 +50,15 @@ export default function OrderPaymentSuccessScreen() {
         </Animated.View>
 
         <Animated.View style={buttonStyle}>
-          <Pressable
+          <AnimatedPressable
             onPress={() => router.replace(isSupplies ? '/order-delivery-tracking' : '/order-ambulance-tracking')}
-            style={({ pressed }) => [styles.viewRequestBtn, pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] }]}
+            style={styles.viewRequestBtn}
           >
             <Text style={styles.viewRequestText}>
               {isSupplies ? 'Track Delivery' : 'Track Ambulance'}
             </Text>
             <Ionicons name="arrow-forward" size={18} color="#FFFFFF" style={{ marginLeft: 8 }} />
-          </Pressable>
+          </AnimatedPressable>
         </Animated.View>
       </View>
     </View>

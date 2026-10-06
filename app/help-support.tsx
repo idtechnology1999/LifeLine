@@ -3,24 +3,26 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   StatusBar,
   Platform,
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { router } from 'expo-router';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 export default function HelpAndSupportScreen() {
+  const insets = useSafeAreaInsets();
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton} activeOpacity={0.7}>
+      <View style={[styles.headerContainer, { paddingTop: insets.top + 16 }]}>
+        <AnimatedPressable onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#111827" />
-        </TouchableOpacity>
+        </AnimatedPressable>
         <Text style={styles.title}>Help and support</Text>
         <Text style={styles.subtitle}>Reach out to us through our available channels</Text>
       </View>
@@ -28,21 +30,21 @@ export default function HelpAndSupportScreen() {
       <View style={styles.headerDivider} />
 
       <View style={styles.contentContainer}>
-        <TouchableOpacity style={styles.channelRow} activeOpacity={0.7}>
+        <AnimatedPressable style={styles.channelRow}>
           <View style={styles.iconContainer}>
             <Ionicons name="chatbubble-outline" size={18} color="#0F172A" />
           </View>
           <Text style={styles.channelTitle}>Chat</Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
 
         <View style={styles.itemDivider} />
 
-        <TouchableOpacity style={styles.channelRow} activeOpacity={0.7}>
+        <AnimatedPressable style={styles.channelRow}>
           <View style={styles.iconContainer}>
             <Feather name="mail" size={18} color="#0F172A" />
           </View>
           <Text style={styles.channelTitle}>E-Mail</Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
       </View>
     </View>
   );

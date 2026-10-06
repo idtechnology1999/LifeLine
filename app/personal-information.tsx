@@ -4,17 +4,19 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import AnimatedPressable from '@/components/AnimatedPressable';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 export default function PersonalInformationScreen() {
+  const insets = useSafeAreaInsets();
   const [fullName, setFullName] = useState('Sarah Johnson');
   const [email, setEmail] = useState('sarahjohnson@gmail.com');
   const [phone, setPhone] = useState('123-4567-4356');
@@ -27,12 +29,12 @@ export default function PersonalInformationScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <ScrollView
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 16 }]}
           keyboardShouldPersistTaps="handled"
         >
-          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+          <AnimatedPressable style={styles.backBtn} onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color="#0F172A" />
-          </TouchableOpacity>
+          </AnimatedPressable>
 
           <Text style={styles.title}>Personal Information</Text>
           <Text style={styles.subtitle}>Update your personal details</Text>
@@ -80,9 +82,9 @@ export default function PersonalInformationScreen() {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.saveBtn} onPress={() => router.back()}>
+          <AnimatedPressable style={styles.saveBtn} onPress={() => router.back()}>
             <Text style={styles.saveText}>Save Changes</Text>
-          </TouchableOpacity>
+          </AnimatedPressable>
         </ScrollView>
       </KeyboardAvoidingView>
     </View>

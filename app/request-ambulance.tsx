@@ -13,13 +13,14 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
 import { colors } from '../src/theme/colors';
 
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 const IS_IOS = Platform.OS === 'ios';
 
 type Severity = 'red' | 'yellow' | 'green' | 'black';
@@ -192,8 +193,8 @@ export default function RequestAmbulanceScreen() {
     });
   }, [canContinue, selectedTier, selectedSymptoms, ambulanceType, otherText, description]);
 
-  const handleCall911 = useCallback(() => {
-    Linking.openURL('tel:911');
+  const handleCallEmergency = useCallback(() => {
+    Linking.openURL('tel:112');
   }, []);
 
   return (
@@ -202,9 +203,9 @@ export default function RequestAmbulanceScreen() {
 
       <BlurView intensity={IS_IOS ? 40 : 60} tint="light" style={[styles.header, { paddingTop: insets.top + 8 }]}>
         <View style={styles.headerRow}>
-          <Pressable hitSlop={12} onPress={() => router.back()} style={styles.backBtn}>
+          <AnimatedPressable hitSlop={12} onPress={() => router.back()} style={styles.backBtn}>
             <Ionicons name="chevron-back" size={22} color={colors.black} />
-          </Pressable>
+          </AnimatedPressable>
           <View style={styles.headerTitleGroup}>
             <Text style={styles.title}>Request Ambulance</Text>
             <Text style={styles.subtitle}>Every second counts</Text>
@@ -230,13 +231,12 @@ export default function RequestAmbulanceScreen() {
             const isSelected = selectedTier === tier.key;
             return (
               <View key={tier.key} style={styles.tierWrap}>
-                <Pressable
+                <AnimatedPressable
                   onPress={() => handleSelectTier(tier.key)}
-                  style={({ pressed }) => [
+                  style={[
                     styles.tierCard,
                     { borderColor: isSelected ? tier.color : tier.border },
                     isSelected && { backgroundColor: tier.bg },
-                    pressed && { opacity: 0.85 },
                   ]}
                 >
                   <View style={[styles.tierBadge, { backgroundColor: tier.color }]}>
@@ -253,7 +253,7 @@ export default function RequestAmbulanceScreen() {
                       color={tier.color}
                     />
                   </View>
-                </Pressable>
+                </AnimatedPressable>
 
                 {tier.key === 'red' && !isSelected && (
                   <View style={styles.redHint}>
@@ -278,15 +278,14 @@ export default function RequestAmbulanceScreen() {
                       {tier.options.map((opt) => {
                         const active = selectedSymptoms.has(opt.id);
                         return (
-                          <Pressable
+                          <AnimatedPressable
                             key={opt.id}
                             onPress={() => toggleSymptom(opt.id)}
-                            style={({ pressed }) => [
+                            style={[
                               styles.symptomChip,
                               active
                                 ? { backgroundColor: tier.color, borderColor: tier.color }
                                 : { backgroundColor: '#FFFFFF', borderColor: colors.border },
-                              pressed && { transform: [{ scale: 0.96 }] },
                             ]}
                           >
                             <Ionicons
@@ -300,7 +299,7 @@ export default function RequestAmbulanceScreen() {
                             ]}>
                               {opt.label}
                             </Text>
-                          </Pressable>
+                          </AnimatedPressable>
                         );
                       })}
                     </View>
@@ -372,14 +371,10 @@ export default function RequestAmbulanceScreen() {
             const active = ambulanceType === type.id;
             const recommended = selectedTier ? type.recommendedFor.includes(selectedTier) : false;
             return (
-              <Pressable
+              <AnimatedPressable
                 key={type.id}
                 onPress={() => setAmbulanceType(type.id)}
-                style={({ pressed }) => [
-                  styles.ambulanceCard,
-                  active && styles.ambulanceCardActive,
-                  pressed && { opacity: 0.85 },
-                ]}
+                style={[styles.ambulanceCard, active && styles.ambulanceCardActive]}
               >
                 <View style={styles.ambulanceCardLeft}>
                   <View style={[styles.ambulanceRadio, active && styles.ambulanceRadioActive]}>
@@ -399,21 +394,17 @@ export default function RequestAmbulanceScreen() {
                   </View>
                   <Text style={styles.ambulanceSubtitle}>{type.subtitle}</Text>
                 </View>
-              </Pressable>
+              </AnimatedPressable>
             );
           })}
         </View>
       </ScrollView>
 
       <BlurView intensity={IS_IOS ? 50 : 80} tint="light" style={[styles.footer, { paddingBottom: insets.bottom + 8 }]}>
-        <Pressable
+        <AnimatedPressable
           disabled={!canContinue}
           onPress={handleContinue}
-          style={({ pressed }) => [
-            styles.continueBtn,
-            !canContinue && styles.continueBtnDisabled,
-            pressed && canContinue && { opacity: 0.9, transform: [{ scale: 0.98 }] },
-          ]}
+          style={[styles.continueBtn, !canContinue && styles.continueBtnDisabled]}
         >
           <LinearGradient
             colors={canContinue ? ['#0D1B2A', '#1B2D45'] : ['#B9C0C9', '#B9C0C9']}
@@ -424,7 +415,7 @@ export default function RequestAmbulanceScreen() {
             <Text style={styles.continueText}>Continue</Text>
             <Ionicons name="arrow-forward" size={18} color="#FFFFFF" style={{ marginLeft: 8 }} />
           </LinearGradient>
-        </Pressable>
+        </AnimatedPressable>
 
         <View style={styles.emergencyHint}>
           <View style={styles.emergencyHintTop}>
@@ -432,12 +423,12 @@ export default function RequestAmbulanceScreen() {
             <Text style={styles.emergencyHintTitle}>Life-threatening emergency?</Text>
           </View>
           <Text style={styles.emergencyHintBody}>
-            Call 911 immediately if this is a life-threatening situation.
+            Call 112 immediately if this is a life-threatening situation.
           </Text>
-          <Pressable onPress={handleCall911} style={({ pressed }) => [styles.callBtn, pressed && { opacity: 0.8 }]}>
+          <AnimatedPressable onPress={handleCallEmergency} style={styles.callBtn}>
             <Ionicons name="call" size={15} color="#FFFFFF" />
-            <Text style={styles.callBtnText}>Call 911</Text>
-          </Pressable>
+            <Text style={styles.callBtnText}>Call 112</Text>
+          </AnimatedPressable>
         </View>
       </BlurView>
     </View>

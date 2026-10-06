@@ -13,6 +13,7 @@ import Animated, {
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { hasSeenOnboarding } from '@/services/onboarding';
 
 SplashScreenExpo.preventAutoHideAsync();
 
@@ -50,7 +51,9 @@ export default function SplashScreen() {
 
     const t = setTimeout(() => {
       runOnJS(hideNative)();
-      router.replace('/onboarding');
+      hasSeenOnboarding().then((seen) => {
+        router.replace(seen ? '/main' : '/onboarding');
+      });
     }, 2600);
     return () => clearTimeout(t);
   }, [scale, opacity, rotate, textOpacity, textY, hideNative]);
@@ -74,7 +77,7 @@ export default function SplashScreen() {
 
       <Animated.View style={[styles.logoWrap, logoStyle]}>
         <Image
-          source={require('../assets/images/logo.png')}
+          source={require('../assets/images/Lifeline_logo.png')}
           style={styles.logo}
           resizeMode="contain"
         />

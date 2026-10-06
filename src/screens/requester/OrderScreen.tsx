@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList, Platform } from 're
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 type OrderType = 'ambulance' | 'supplies';
 type OrderStatus = 'completed' | 'in-progress' | 'delivered' | 'cancelled';

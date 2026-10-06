@@ -3,31 +3,32 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   StatusBar,
   Platform,
 } from 'react-native';
 import { Feather, Ionicons, MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { router } from 'expo-router';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 export default function SubscriptionScreen() {
+  const insets = useSafeAreaInsets();
   const [selectedPlan, setSelectedPlan] = useState<'Basic' | 'Family' | 'Annual'>('Family');
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      <View style={styles.headerContainer}>
-        <TouchableOpacity
+      <View style={[styles.headerContainer, { paddingTop: insets.top + 16 }]}>
+        <AnimatedPressable
           onPress={() => router.back()}
           style={styles.backButton}
-          activeOpacity={0.7}
         >
           <Ionicons name="arrow-back" size={24} color="#111827" />
-        </TouchableOpacity>
+        </AnimatedPressable>
 
         <Text style={styles.title}>Subscription & Plans</Text>
         <Text style={styles.subtitle}>Choose a plan that works for you</Text>
@@ -48,10 +49,9 @@ export default function SubscriptionScreen() {
         </View>
 
         {/* Basic Plan */}
-        <TouchableOpacity
+        <AnimatedPressable
           style={[styles.planCard, selectedPlan === 'Basic' && styles.selectedPlanCard]}
           onPress={() => setSelectedPlan('Basic')}
-          activeOpacity={0.9}
         >
           <View style={styles.planHeader}>
             <View>
@@ -72,7 +72,7 @@ export default function SubscriptionScreen() {
               </View>
             ))}
           </View>
-        </TouchableOpacity>
+        </AnimatedPressable>
 
         {/* Family Plan */}
         <View style={styles.popularPlanWrapper}>
@@ -80,10 +80,9 @@ export default function SubscriptionScreen() {
             <FontAwesome name="star" size={11} color="#FACC15" />
             <Text style={styles.popularBadgeText}>Most Popular</Text>
           </View>
-          <TouchableOpacity
+          <AnimatedPressable
             style={[styles.planCard, styles.popularPlanCard, selectedPlan === 'Family' && styles.selectedPlanCard]}
             onPress={() => setSelectedPlan('Family')}
-            activeOpacity={0.9}
           >
             <View style={styles.planHeader}>
               <View>
@@ -104,14 +103,13 @@ export default function SubscriptionScreen() {
                 </View>
               ))}
             </View>
-          </TouchableOpacity>
+          </AnimatedPressable>
         </View>
 
         {/* Annual Plan */}
-        <TouchableOpacity
+        <AnimatedPressable
           style={[styles.planCard, selectedPlan === 'Annual' && styles.selectedPlanCard]}
           onPress={() => setSelectedPlan('Annual')}
-          activeOpacity={0.9}
         >
           <View style={styles.planHeader}>
             <View>
@@ -132,7 +130,7 @@ export default function SubscriptionScreen() {
               </View>
             ))}
           </View>
-        </TouchableOpacity>
+        </AnimatedPressable>
 
         {/* Why Subscribe */}
         <Text style={styles.whySectionTitle}>Why Subscribe?</Text>
@@ -157,9 +155,9 @@ export default function SubscriptionScreen() {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.subscribeButton} activeOpacity={0.8}>
+        <AnimatedPressable style={styles.subscribeButton}>
           <Text style={styles.subscribeButtonText}>Subscribe Now</Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
 
         <Text style={styles.footerNotice}>
           You can cancel your subscription at any time

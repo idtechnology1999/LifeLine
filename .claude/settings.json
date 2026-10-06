@@ -1,4 +1,17 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "WebFetch(domain:docs.expo.dev)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://localhost:8081/driver/store\")",
+      "Bash(grep -c \"\\\\`/driver/store\\\\`\" \"c:\\\\Users\\\\~oluwaseun\\\\Desktop\\\\project\\\\Lifeline\\\\.expo\\\\types\\\\router.d.ts\")",
+      "Bash(curl -s -i \"http://localhost:8081/driver/store\")",
+      "Bash(grep -c '`/driver/store`' \"c:\\\\Users\\\\~oluwaseun\\\\Desktop\\\\project\\\\Lifeline\\\\.expo\\\\types\\\\router.d.ts\")",
+      "Bash(mv index.tsx \"\\(tabs\\)/index.tsx\")",
+      "Bash(mv inventory.tsx \"\\(tabs\\)/inventory.tsx\")",
+      "Bash(mv profile.tsx \"\\(tabs\\)/profile.tsx\")"
+    ]
+  },
   "enabledPlugins": {
     "expo@claude-plugins-official": true
   }

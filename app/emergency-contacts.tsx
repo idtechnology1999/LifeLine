@@ -3,15 +3,16 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   FlatList,
   StatusBar,
   Platform,
 } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { router } from 'expo-router';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 interface EmergencyContact {
   id: string;
@@ -25,6 +26,7 @@ const INITIAL_CONTACTS: EmergencyContact[] = [
 ];
 
 export default function EmergencyContactScreen() {
+  const insets = useSafeAreaInsets();
   const [contacts, setContacts] = useState<EmergencyContact[]>(INITIAL_CONTACTS);
 
   const handleDelete = (id: string) => {
@@ -37,13 +39,12 @@ export default function EmergencyContactScreen() {
         <Text style={styles.relationText}>{item.relation}</Text>
         <Text style={styles.phoneText}>{item.phoneNumber}</Text>
       </View>
-      <TouchableOpacity
+      <AnimatedPressable
         onPress={() => handleDelete(item.id)}
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        activeOpacity={0.7}
       >
         <Feather name="trash-2" size={20} color="#E53935" />
-      </TouchableOpacity>
+      </AnimatedPressable>
     </View>
   );
 
@@ -51,14 +52,13 @@ export default function EmergencyContactScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      <View style={styles.headerContainer}>
-        <TouchableOpacity
+      <View style={[styles.headerContainer, { paddingTop: insets.top + 16 }]}>
+        <AnimatedPressable
           onPress={() => router.back()}
           style={styles.backButton}
-          activeOpacity={0.7}
         >
           <Ionicons name="arrow-back" size={24} color="#111827" />
-        </TouchableOpacity>
+        </AnimatedPressable>
 
         <Text style={styles.title}>Emergency Contact</Text>
         <Text style={styles.subtitle}>

@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { colors } from '@/src/theme/colors';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 const ACTIVE_REQUEST = {
   id: '1',

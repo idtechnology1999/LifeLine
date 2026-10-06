@@ -8,20 +8,22 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { router } from 'expo-router';
-import { TouchableOpacity } from 'react-native';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 export default function TermsAndPrivacyScreen() {
+  const insets = useSafeAreaInsets();
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton} activeOpacity={0.7}>
+      <View style={[styles.headerContainer, { paddingTop: insets.top + 16 }]}>
+        <AnimatedPressable onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#111827" />
-        </TouchableOpacity>
+        </AnimatedPressable>
         <Text style={styles.title}>Terms and privacy</Text>
         <Text style={styles.subtitle}>View our terms of use and privacy policy</Text>
       </View>

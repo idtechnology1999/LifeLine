@@ -1,5 +1,6 @@
+import AnimatedPressable from '@/components/AnimatedPressable';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, Pressable, Image } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Circle, Path } from 'react-native-svg';
@@ -18,6 +19,7 @@ import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/colors';
+import { setSeenOnboarding } from '@/services/onboarding';
 
 const { width, height } = Dimensions.get('window');
 
@@ -123,8 +125,14 @@ export default function OnboardingScreen() {
     if (index < SLIDES.length - 1) {
       goTo(index + 1);
     } else {
+      setSeenOnboarding();
       router.replace('/main');
     }
+  };
+
+  const handleSkip = () => {
+    setSeenOnboarding();
+    router.replace('/main');
   };
 
   const pan = Gesture.Pan()
@@ -165,14 +173,14 @@ export default function OnboardingScreen() {
 
       {/* skip — top right, hide on last slide */}
       {index < SLIDES.length - 1 && (
-        <Pressable style={[styles.skipBtn, { top: insets.top + 16 }]} onPress={() => router.replace('/main')} hitSlop={12}>
+        <AnimatedPressable style={[styles.skipBtn, { top: insets.top + 16 }]} onPress={handleSkip} hitSlop={12}>
           <Text style={styles.skipText}>Skip</Text>
-        </Pressable>
+        </AnimatedPressable>
       )}
 
       {/* back arrow — slide 2 and 3 only */}
       {index > 0 && (
-        <Pressable style={[styles.backBtn, { top: insets.top + 16 }]} onPress={() => goTo(index - 1)} hitSlop={12}>
+        <AnimatedPressable style={[styles.backBtn, { top: insets.top + 16 }]} onPress={() => goTo(index - 1)} hitSlop={12}>
           <Svg width={22} height={22} viewBox="0 0 24 24">
             <Path
               d="M19 12H5M5 12L11 6M5 12L11 18"
@@ -183,7 +191,7 @@ export default function OnboardingScreen() {
               fill="none"
             />
           </Svg>
-        </Pressable>
+        </AnimatedPressable>
       )}
 
       <GestureDetector gesture={pan}>
@@ -240,8 +248,8 @@ export default function OnboardingScreen() {
 
         {/* CTA button */}
         <Animated.View style={btnStyle}>
-          <Pressable
-            style={({ pressed }) => [styles.nextBtn, pressed && { opacity: 0.88 }]}
+          <AnimatedPressable
+            style={styles.nextBtn}
             onPress={handleNext}
           >
             <LinearGradient
@@ -254,7 +262,7 @@ export default function OnboardingScreen() {
                 {index === SLIDES.length - 1 ? 'Get Started' : 'Next'}
               </Text>
             </LinearGradient>
-          </Pressable>
+          </AnimatedPressable>
         </Animated.View>
       </View>
 

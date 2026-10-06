@@ -10,12 +10,13 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams } from 'expo-router';
 import { colors } from '../src/theme/colors';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 const RED = '#D92B20';
 
 type Sender = 'driver' | 'user';
@@ -171,9 +172,9 @@ export default function PriceNegotiationScreen() {
       <StatusBar style="dark" />
 
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()} hitSlop={12} style={styles.backBtn}>
+        <AnimatedPressable onPress={() => router.back()} hitSlop={12} style={styles.backBtn}>
           <Ionicons name="arrow-back" size={24} color="#1C1C1E" />
-        </Pressable>
+        </AnimatedPressable>
         <Text style={styles.title}>Price Negotiation</Text>
         <View style={styles.timerRow}>
           <Ionicons name="time-outline" size={15} color="#FF7A00" />
@@ -204,9 +205,9 @@ export default function PriceNegotiationScreen() {
               </Text>
             </View>
           </View>
-          <Pressable onPress={handleCallDriver} style={styles.callIconBtn}>
+          <AnimatedPressable onPress={handleCallDriver} style={styles.callIconBtn}>
             <Ionicons name="call" size={18} color={colors.accentGreen} />
-          </Pressable>
+          </AnimatedPressable>
         </View>
 
         <View style={styles.infoRow}>
@@ -293,7 +294,7 @@ export default function PriceNegotiationScreen() {
               style={styles.counterInput}
             />
           </View>
-          <Pressable
+          <AnimatedPressable
             onPress={handleSendCounter}
             disabled={!counterText}
             style={[styles.sendBtn, !counterText && styles.sendBtnDisabled]}
@@ -306,17 +307,17 @@ export default function PriceNegotiationScreen() {
             >
               Send
             </Text>
-          </Pressable>
+          </AnimatedPressable>
         </View>
 
-        <Pressable
+        <AnimatedPressable
           onPress={() => handleAccept(currentOffer)}
           style={styles.acceptBtn}
         >
           <Text style={styles.acceptBtnText}>
             Accept {formatCurrency(currentOffer)}
           </Text>
-        </Pressable>
+        </AnimatedPressable>
       </View>
     </View>
   );

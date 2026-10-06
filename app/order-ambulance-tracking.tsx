@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { Feather, Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 export default function OrderAmbulanceTrackingScreen() {
   const insets = useSafeAreaInsets();
@@ -53,12 +54,12 @@ export default function OrderAmbulanceTrackingScreen() {
               </View>
             </View>
             <View style={styles.driverActions}>
-              <TouchableOpacity style={styles.callButton} activeOpacity={0.7}>
+              <AnimatedPressable style={styles.callButton}>
                 <Ionicons name="call" size={18} color="#10B981" />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.chatButton} activeOpacity={0.7}>
+              </AnimatedPressable>
+              <AnimatedPressable style={styles.chatButton}>
                 <Ionicons name="chatbubble-ellipses" size={18} color="#3B82F6" />
-              </TouchableOpacity>
+              </AnimatedPressable>
             </View>
           </View>
 
@@ -101,10 +102,10 @@ export default function OrderAmbulanceTrackingScreen() {
           <Text style={styles.emergencyValue}>Cardiac Emergency</Text>
         </View>
 
-        <TouchableOpacity style={styles.shareBtn} activeOpacity={0.8}>
+        <AnimatedPressable style={styles.shareBtn}>
           <Feather name="send" size={16} color="#0F172A" />
           <Text style={styles.shareBtnText}>Share Live Location</Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
       </View>
     </View>
   );

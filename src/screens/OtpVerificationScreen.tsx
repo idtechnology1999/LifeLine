@@ -9,6 +9,8 @@ import Animated, {
 import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../theme/colors';
+import { setToken } from '@/services/auth';
+import { getVerification, setVerified, ProviderServiceType } from '@/services/verification';
 
 const CODE_LENGTH = 6;
 const RESEND_SECONDS = 300;
@@ -26,12 +28,44 @@ function formatTime(totalSeconds: number): string {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
+function ResendCountdown({ onResend }: { onResend: () => void }) {
+  const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
+
+  useEffect(() => {
+    if (secondsLeft <= 0) return;
+    const timer = setInterval(() => setSecondsLeft((s) => Math.max(0, s - 1)), 1000);
+    return () => clearInterval(timer);
+  }, [secondsLeft]);
+
+  const handlePress = () => {
+    if (secondsLeft > 0) return;
+    setSecondsLeft(RESEND_SECONDS);
+    onResend();
+  };
+
+  return (
+    <>
+      <Pressable onPress={handlePress} disabled={secondsLeft > 0}>
+        <Text style={[styles.resendText, secondsLeft > 0 && styles.resendTextDisabled]}>
+          Resend code
+        </Text>
+      </Pressable>
+      <Text style={styles.expiryText}>
+        {secondsLeft > 0 ? `Code expires in ${formatTime(secondsLeft)}` : 'Code expired'}
+      </Text>
+    </>
+  );
+}
+
 export default function OtpVerificationScreen() {
   const insets = useSafeAreaInsets();
-  const { phone = '', mode = 'login' } = useLocalSearchParams<{ phone: string; mode: string }>();
+  const { phone = '', mode = 'login', redirectTo } = useLocalSearchParams<{
+    phone: string;
+    mode: string;
+    redirectTo?: string;
+  }>();
 
   const [digits, setDigits] = useState<string[]>(Array(CODE_LENGTH).fill(''));
-  const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
   const inputs = useRef<(TextInput | null)[]>([]);
   const btnScale = useSharedValue(1);
   const scale = useSharedValue(0);
@@ -41,12 +75,6 @@ export default function OtpVerificationScreen() {
     scale.value = withSpring(1, { damping: 12, stiffness: 150 });
     opacity.value = withSpring(1);
   }, [scale, opacity]);
-
-  useEffect(() => {
-    if (secondsLeft <= 0) return;
-    const timer = setInterval(() => setSecondsLeft((s) => Math.max(0, s - 1)), 1000);
-    return () => clearInterval(timer);
-  }, [secondsLeft]);
 
   const handleChange = (text: string, index: number) => {
     const digit = text.replace(/[^\d]/g, '').slice(-1);
@@ -66,8 +94,6 @@ export default function OtpVerificationScreen() {
   };
 
   const handleResend = () => {
-    if (secondsLeft > 0) return;
-    setSecondsLeft(RESEND_SECONDS);
     setDigits(Array(CODE_LENGTH).fill(''));
     inputs.current[0]?.focus();
   };
@@ -75,11 +101,30 @@ export default function OtpVerificationScreen() {
   const code = digits.join('');
   const canConfirm = code.length === CODE_LENGTH;
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!canConfirm) return;
     btnScale.value = withSpring(0.97, { damping: 10 }, () => {
       btnScale.value = withSpring(1);
     });
+    if (redirectTo) {
+      await setToken('demo-token');
+      if (mode === 'login') {
+        const verification = await getVerification();
+        const defaultServiceType: ProviderServiceType = redirectTo?.startsWith('/dispatcher')
+          ? 'dispatcher'
+          : 'ambulance';
+        const serviceType = verification?.serviceType ?? defaultServiceType;
+        if (!verification) await setVerified(serviceType);
+        const dest =
+          serviceType === 'supplier' ? '/driver/store'
+          : serviceType === 'dispatcher' ? '/dispatcher/dashboard'
+          : '/driver/dashboard';
+        router.replace(dest as any);
+        return;
+      }
+      router.replace(redirectTo as any);
+      return;
+    }
     if (mode === 'signup') {
       router.replace('/auth');
     } else {
@@ -134,14 +179,7 @@ export default function OtpVerificationScreen() {
           ))}
         </View>
 
-        <Pressable onPress={handleResend} disabled={secondsLeft > 0}>
-          <Text style={[styles.resendText, secondsLeft > 0 && styles.resendTextDisabled]}>
-            Resend code
-          </Text>
-        </Pressable>
-        <Text style={styles.expiryText}>
-          {secondsLeft > 0 ? `Code expires in ${formatTime(secondsLeft)}` : 'Code expired'}
-        </Text>
+        <ResendCountdown onResend={handleResend} />
 
         <View style={styles.spacer} />
 

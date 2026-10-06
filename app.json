@@ -4,7 +4,7 @@
     "slug": "Lifeline",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo.png",
+    "icon": "./assets/images/Lifeline_logo.png",
     "scheme": "lifeline",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -14,7 +14,7 @@
     "android": {
       "package": "com.oluwaseun_123.lifeline",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#101828",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
@@ -31,13 +31,13 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/logo.png",
+          "image": "./assets/images/Lifeline_logo.png",
           "imageWidth": 120,
           "resizeMode": "contain",
-          "backgroundColor": "#101828",
-          "dark": {
-            "backgroundColor": "#101828"
-          }
+      "backgroundColor": "#101828",
+      "dark": {
+        "backgroundColor": "#101828"
+      }
         }
       ],
       "expo-secure-store",

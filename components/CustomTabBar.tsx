@@ -1,19 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Pressable, Text, StyleSheet, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+const triggerHaptic = () => {
+  if (Platform.OS !== 'web') {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+  }
+};
 
-const ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
+import { FONT } from '@/constants/typography';
+
+type TabIconName = 'home' | 'create' | 'cube' | 'archive' | 'person';
+
+const ICONS: Record<string, TabIconName> = {
   index: 'home',
   request: 'create',
   order: 'cube',
+  inventory: 'archive',
   profile: 'person',
 };
 
-const ACTIVE_GRADIENT = ['#0F2E1D', '#1D6B3E'];
+const ACTIVE_GRADIENT: [string, string] = ['#0F2E1D', '#1D6B3E'];
 const INACTIVE_COLOR = '#9CA3AF';
 const ACTIVE_TEXT_COLOR = '#FFFFFF';
 
@@ -23,23 +34,35 @@ function TabItem({
   isFocused,
   onPress,
 }: {
-  iconName: keyof typeof Ionicons.glyphMap;
+  iconName: TabIconName;
   label: string;
   isFocused: boolean;
   onPress: () => void;
 }) {
+  const scale = useSharedValue(isFocused ? 1 : 0.85);
+
+  useEffect(() => {
+    scale.value = withSpring(isFocused ? 1 : 0.85, { damping: 12, stiffness: 260 });
+  }, [isFocused, scale]);
+
+  const pillStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
   if (isFocused) {
     return (
       <Pressable onPress={onPress} style={styles.tabItem}>
-        <LinearGradient
-          colors={ACTIVE_GRADIENT}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.activePill}
-        >
-          <Ionicons name={iconName} size={18} color={ACTIVE_TEXT_COLOR} />
-          <Text style={styles.activeLabel}>{label}</Text>
-        </LinearGradient>
+        <Animated.View style={pillStyle}>
+          <LinearGradient
+            colors={ACTIVE_GRADIENT}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.activePill}
+          >
+            <Ionicons name={iconName} size={18} color={ACTIVE_TEXT_COLOR} />
+            <Text style={styles.activeLabel}>{label}</Text>
+          </LinearGradient>
+        </Animated.View>
       </Pressable>
     );
   }
@@ -82,6 +105,7 @@ export default function CustomTabBar({ state, descriptors, navigation }: any) {
             });
 
             if (!isFocused && !event.defaultPrevented) {
+              triggerHaptic();
               navigation.navigate(route.name);
             }
           };

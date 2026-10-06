@@ -8,12 +8,12 @@ import Animated, {
   withDelay,
   Easing,
 } from 'react-native-reanimated';
-import Svg, { Path } from 'react-native-svg';
 import { Ionicons } from '@expo/vector-icons';
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { router } from 'expo-router';
 
 const { width } = Dimensions.get('window');
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 export default function PaymentSuccessScreen({
   title = 'Payment Successful!',
@@ -80,15 +80,7 @@ export default function PaymentSuccessScreen({
       <View style={styles.content}>
         <Animated.View style={[styles.iconCircle, circleStyle]}>
           <Animated.View style={checkStyle}>
-            <Svg width={56} height={56} viewBox="0 0 24 24" fill="none">
-              <Path
-                d="M5 13l4 4L19 7"
-                stroke="#1FA855"
-                strokeWidth={2.5}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </Svg>
+            <Ionicons name="medkit" size={48} color="#1FA855" />
           </Animated.View>
         </Animated.View>
 
@@ -98,16 +90,13 @@ export default function PaymentSuccessScreen({
         </Animated.View>
 
         <Animated.View style={buttonStyle}>
-          <Pressable
+          <AnimatedPressable
             onPress={() => router.replace('/requester/request')}
-            style={({ pressed }) => [
-              styles.viewRequestBtn,
-              pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
-            ]}
+            style={styles.viewRequestBtn}
           >
             <Text style={styles.viewRequestText}>View Request</Text>
             <Ionicons name="arrow-forward" size={18} color="#FFFFFF" style={{ marginLeft: 8 }} />
-          </Pressable>
+          </AnimatedPressable>
         </Animated.View>
       </View>
     </View>

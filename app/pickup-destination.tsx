@@ -11,13 +11,14 @@ import {
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams } from 'expo-router';
 import * as Location from 'expo-location';
 import { colors } from '../src/theme/colors';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 const IS_IOS = Platform.OS === 'ios';
 
 type Hospital = {
@@ -97,9 +98,9 @@ export default function PickupDestinationScreen() {
 
       <BlurView intensity={IS_IOS ? 40 : 60} tint="light" style={[styles.header, { paddingTop: insets.top + 8 }]}>
         <View style={styles.headerRow}>
-          <Pressable hitSlop={12} onPress={() => router.back()} style={styles.backBtn}>
+          <AnimatedPressable hitSlop={12} onPress={() => router.back()} style={styles.backBtn}>
             <Ionicons name="chevron-back" size={22} color="#1C1C1E" />
-          </Pressable>
+          </AnimatedPressable>
           <Text style={styles.title}>Set Location</Text>
         </View>
       </BlurView>
@@ -129,17 +130,17 @@ export default function PickupDestinationScreen() {
               onFocus={() => setFocusedInput('pickup')}
               onBlur={() => setFocusedInput(null)}
             />
-            <Pressable onPress={handleUseCurrentLocation} style={styles.locateBtn} disabled={locating}>
+            <AnimatedPressable onPress={handleUseCurrentLocation} style={styles.locateBtn} disabled={locating}>
               <Ionicons name="navigate" size={16} color="#FFFFFF" />
-            </Pressable>
+            </AnimatedPressable>
           </View>
 
-          <Pressable onPress={handleUseCurrentLocation} hitSlop={8} style={styles.locationLink}>
+          <AnimatedPressable onPress={handleUseCurrentLocation} hitSlop={8} style={styles.locationLink}>
             <Ionicons name="navigate-outline" size={14} color={colors.accentBlue} />
             <Text style={styles.locationLinkText}>
               {locating ? 'Locating\u2026' : 'Use current location'}
             </Text>
-          </Pressable>
+          </AnimatedPressable>
           {locationError ? (
             <Text style={styles.locationError}>{locationError}</Text>
           ) : null}
@@ -180,14 +181,10 @@ export default function PickupDestinationScreen() {
           {MOCK_HOSPITALS.map((hospital) => {
             const active = selectedHospital?.id === hospital.id;
             return (
-              <Pressable
+              <AnimatedPressable
                 key={hospital.id}
                 onPress={() => handleSelectHospital(hospital)}
-                style={({ pressed }) => [
-                  styles.hospitalCard,
-                  active && styles.hospitalCardActive,
-                  pressed && { opacity: 0.85 },
-                ]}
+                style={[styles.hospitalCard, active && styles.hospitalCardActive]}
               >
                 <View style={styles.hospitalCardLeft}>
                   <View style={[styles.hospitalIcon, active && styles.hospitalIconActive]}>
@@ -203,21 +200,17 @@ export default function PickupDestinationScreen() {
                     <Ionicons name="checkmark-circle" size={22} color={colors.accentBlue} />
                   </View>
                 )}
-              </Pressable>
+              </AnimatedPressable>
             );
           })}
         </View>
       </ScrollView>
 
       <BlurView intensity={IS_IOS ? 50 : 80} tint="light" style={[styles.footer, { paddingBottom: insets.bottom + 8 }]}>
-        <Pressable
+        <AnimatedPressable
           disabled={!canContinue}
           onPress={handleContinue}
-          style={({ pressed }) => [
-            styles.continueBtn,
-            !canContinue && styles.continueBtnDisabled,
-            pressed && canContinue && { opacity: 0.9, transform: [{ scale: 0.98 }] },
-          ]}
+          style={[styles.continueBtn, !canContinue && styles.continueBtnDisabled]}
         >
           <LinearGradient
             colors={canContinue ? ['#0D1B2A', '#1B2D45'] : ['#B9C0C9', '#B9C0C9']}
@@ -228,7 +221,7 @@ export default function PickupDestinationScreen() {
             <Text style={styles.continueText}>Request Ambulance</Text>
             <Ionicons name="arrow-forward" size={18} color="#FFFFFF" style={{ marginLeft: 8 }} />
           </LinearGradient>
-        </Pressable>
+        </AnimatedPressable>
       </BlurView>
     </View>
   );

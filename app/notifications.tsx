@@ -3,14 +3,15 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   StatusBar,
   Platform,
 } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
+import AnimatedPressable from '@/components/AnimatedPressable';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 interface NotificationOption {
   id: string;
@@ -20,6 +21,7 @@ interface NotificationOption {
 }
 
 export default function NotificationSettingsScreen() {
+  const insets = useSafeAreaInsets();
   const [options, setOptions] = useState<NotificationOption[]>([
     { id: '1', title: 'Pop Up Notification', subtitle: 'Your device notifies you', enabled: false },
     { id: '2', title: 'SMS Notification', subtitle: 'You get an sms on your registered line', enabled: false },
@@ -36,10 +38,10 @@ export default function NotificationSettingsScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton} activeOpacity={0.7}>
+      <View style={[styles.headerContainer, { paddingTop: insets.top + 16 }]}>
+        <AnimatedPressable onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#111827" />
-        </TouchableOpacity>
+        </AnimatedPressable>
         <Text style={styles.title}>Notification</Text>
         <Text style={styles.subtitle}>Manage your notification preferences</Text>
       </View>
@@ -49,10 +51,9 @@ export default function NotificationSettingsScreen() {
       <View style={styles.contentContainer}>
         {options.map((item, index) => (
           <View key={item.id}>
-            <TouchableOpacity
+            <AnimatedPressable
               style={styles.optionRow}
               onPress={() => toggleOption(item.id)}
-              activeOpacity={0.7}
             >
               <View style={styles.textContainer}>
                 <Text style={styles.optionTitle}>{item.title}</Text>
@@ -61,7 +62,7 @@ export default function NotificationSettingsScreen() {
               <View style={[styles.checkbox, item.enabled && styles.checkboxSelected]}>
                 {item.enabled && <Feather name="check" size={14} color="#FFFFFF" />}
               </View>
-            </TouchableOpacity>
+            </AnimatedPressable>
             {index < options.length - 1 && <View style={styles.itemDivider} />}
           </View>
         ))}

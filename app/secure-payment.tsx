@@ -3,16 +3,18 @@ import {
   View,
   Text,
   StyleSheet,
-  Pressable,
   Platform,
+  ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams } from 'expo-router';
 import { colors } from '../src/theme/colors';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 type PaymentMethodId = 'card' | 'apple_pay' | 'google_pay';
 
@@ -59,16 +61,21 @@ export default function SecurePaymentScreen() {
       <StatusBar style="dark" />
 
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()} hitSlop={12} style={styles.backBtn}>
+        <AnimatedPressable onPress={() => router.back()} hitSlop={12} style={styles.backBtn}>
           <Ionicons name="arrow-back" size={24} color="#1C1C1E" />
-        </Pressable>
+        </AnimatedPressable>
         <Text style={styles.title}>Secure Payment</Text>
         <Text style={styles.subtitle}>Complete payment to activate service</Text>
       </View>
 
       <View style={styles.divider} />
 
-      <View style={styles.content}>
+      <ScrollView
+        style={styles.contentScroll}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.amountCard}>
           <Text style={styles.amountLabel}>Amount to Pay</Text>
           <Text style={styles.amountValue}>{formatCurrency(amount)}</Text>
@@ -83,7 +90,7 @@ export default function SecurePaymentScreen() {
           {PAYMENT_METHODS.map((method) => {
             const selected = selectedMethod === method.id;
             return (
-              <Pressable
+              <AnimatedPressable
                 key={method.id}
                 onPress={() => setSelectedMethod(method.id)}
                 style={[styles.methodRow, selected && styles.methodRowSelected]}
@@ -113,14 +120,14 @@ export default function SecurePaymentScreen() {
                     <Ionicons name="checkmark" size={14} color="#FFFFFF" />
                   </View>
                 )}
-              </Pressable>
+              </AnimatedPressable>
             );
           })}
         </View>
 
-        <Pressable style={styles.addMethodBtn}>
+        <AnimatedPressable style={styles.addMethodBtn}>
           <Text style={styles.addMethodText}>+ Add New Payment Method</Text>
-        </Pressable>
+        </AnimatedPressable>
 
         <View style={styles.secureNote}>
           <Ionicons name="shield-checkmark" size={20} color={colors.accentGreen} />
@@ -132,18 +139,25 @@ export default function SecurePaymentScreen() {
             </Text>
           </View>
         </View>
-      </View>
+      </ScrollView>
 
       <View style={[styles.footer, { paddingBottom: insets.bottom + 14 }]}>
-        <Pressable
+        <AnimatedPressable
           onPress={handleConfirm}
           disabled={isProcessing}
           style={[styles.confirmBtn, isProcessing && styles.confirmBtnDisabled]}
         >
-          <Text style={styles.confirmBtnText}>
-            {isProcessing ? 'Processing…' : `Confirm Payment - ${formatCurrency(amount)}`}
-          </Text>
-        </Pressable>
+          {isProcessing ? (
+            <View style={styles.processingRow}>
+              <ActivityIndicator color="#FFFFFF" size="small" />
+              <Text style={styles.confirmBtnText}>Processing…</Text>
+            </View>
+          ) : (
+            <Text style={styles.confirmBtnText}>
+              {`Confirm Payment - ${formatCurrency(amount)}`}
+            </Text>
+          )}
+        </AnimatedPressable>
         <Text style={styles.termsText}>
           By confirming, you agree to our terms of service
         </Text>
@@ -181,9 +195,12 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: 'rgba(0,0,0,0.08)',
   },
-  content: {
+  contentScroll: {
     flex: 1,
+  },
+  content: {
     paddingHorizontal: 20,
+    paddingBottom: 24,
   },
   amountCard: {
     backgroundColor: '#EAF1FE',
@@ -312,6 +329,11 @@ const styles = StyleSheet.create({
   },
   confirmBtnDisabled: {
     opacity: 0.6,
+  },
+  processingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
   confirmBtnText: {
     fontFamily: FONT,

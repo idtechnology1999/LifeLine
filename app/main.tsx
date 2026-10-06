@@ -76,8 +76,10 @@ export default function MainPage() {
   const handleSelect = (key: Role) => {
     if (key === 'requester') {
       router.push('/auth');
+    } else if (key === 'driver') {
+      router.push({ pathname: '/auth', params: { redirectTo: '/driver' } });
     } else {
-      router.push(`/${key}` as any);
+      router.push({ pathname: '/auth', params: { redirectTo: '/dispatcher/ride-details' } });
     }
   };
 

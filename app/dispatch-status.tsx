@@ -10,12 +10,13 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { router, useLocalSearchParams } from 'expo-router';
 import { colors } from '../src/theme/colors';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 type DispatchState = 'searching' | 'matched';
 
@@ -102,12 +103,12 @@ function SearchingView({ onCancel }: { onCancel: () => void }) {
         </View>
       </View>
 
-      <Pressable
+      <AnimatedPressable
         onPress={onCancel}
         style={[styles.searchingCancelBtn, { marginBottom: insets.bottom + 16 }]}
       >
         <Text style={styles.searchingCancelText}>Cancel Request</Text>
-      </Pressable>
+      </AnimatedPressable>
     </View>
   );
 }
@@ -187,12 +188,12 @@ export default function DispatchStatusScreen() {
                   {driver.vehicle} · {driver.plate} · {driver.etaMinutes} min away
                 </Text>
               </View>
-              <Pressable onPress={() => handleCallDriver(driver.phone)} style={styles.callIconBtn}>
+              <AnimatedPressable onPress={() => handleCallDriver(driver.phone)} style={styles.callIconBtn}>
                 <Ionicons name="call" size={16} color={colors.accentGreen} />
-              </Pressable>
-              <Pressable onPress={() => handleConnect(driver)} style={styles.connectPill}>
+              </AnimatedPressable>
+              <AnimatedPressable onPress={() => handleConnect(driver)} style={styles.connectPill}>
                 <Text style={styles.connectPillText}>Connect</Text>
-              </Pressable>
+              </AnimatedPressable>
             </View>
           ))}
         </View>
@@ -210,9 +211,9 @@ export default function DispatchStatusScreen() {
         </View>
 
         <View style={styles.actionRow}>
-          <Pressable onPress={handleCancel} style={styles.cancelBtnFull}>
+          <AnimatedPressable onPress={handleCancel} style={styles.cancelBtnFull}>
             <Text style={styles.cancelTextFull}>Cancel Request</Text>
-          </Pressable>
+          </AnimatedPressable>
         </View>
       </View>
     </View>

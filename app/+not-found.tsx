@@ -1,3 +1,4 @@
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -9,9 +10,9 @@ export default function NotFoundScreen() {
       <StatusBar style="dark" />
       <Text style={styles.code}>404</Text>
       <Text style={styles.message}>This page doesn't exist.</Text>
-      <Pressable style={styles.button} onPress={() => router.replace('/')}>
+      <AnimatedPressable style={styles.button} onPress={() => router.replace('/')}>
         <Text style={styles.buttonText}>Go Home</Text>
-      </Pressable>
+      </AnimatedPressable>
     </View>
   );
 }

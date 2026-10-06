@@ -3,17 +3,19 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   StatusBar,
   Platform,
 } from 'react-native';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import AnimatedPressable from '@/components/AnimatedPressable';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 export default function ProductDetailsScreen() {
+  const insets = useSafeAreaInsets();
   const [quantity, setQuantity] = useState(1);
 
   const keyFeatures = [
@@ -28,14 +30,14 @@ export default function ProductDetailsScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.iconButton} activeOpacity={0.7} onPress={() => router.back()}>
+      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+        <AnimatedPressable style={styles.iconButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color="#111827" />
-        </TouchableOpacity>
+        </AnimatedPressable>
         <Text style={styles.headerTitle}>Product Details</Text>
-        <TouchableOpacity style={styles.iconButton} activeOpacity={0.7}>
+        <AnimatedPressable style={styles.iconButton}>
           <Feather name="shopping-cart" size={22} color="#111827" />
-        </TouchableOpacity>
+        </AnimatedPressable>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -98,28 +100,26 @@ export default function ProductDetailsScreen() {
           <View style={styles.quantityRow}>
             <Text style={styles.quantityLabel}>Quantity</Text>
             <View style={styles.counterControl}>
-              <TouchableOpacity
+              <AnimatedPressable
                 style={styles.counterButton}
                 onPress={() => setQuantity((p) => (p > 1 ? p - 1 : 1))}
-                activeOpacity={0.7}
               >
                 <Feather name="minus" size={16} color="#0F172A" />
-              </TouchableOpacity>
+              </AnimatedPressable>
               <Text style={styles.quantityValue}>{quantity}</Text>
-              <TouchableOpacity
+              <AnimatedPressable
                 style={styles.counterButton}
                 onPress={() => setQuantity((p) => p + 1)}
-                activeOpacity={0.7}
               >
                 <Feather name="plus" size={16} color="#0F172A" />
-              </TouchableOpacity>
+              </AnimatedPressable>
             </View>
           </View>
 
-          <TouchableOpacity style={styles.addToCartBtn} activeOpacity={0.85} onPress={() => router.push('/cart')}>
+          <AnimatedPressable style={styles.addToCartBtn} onPress={() => router.push('/cart')}>
             <Feather name="shopping-cart" size={18} color="#FFFFFF" />
             <Text style={styles.addToCartText}>Add to Cart - N8,500</Text>
-          </TouchableOpacity>
+          </AnimatedPressable>
         </View>
       </ScrollView>
     </View>

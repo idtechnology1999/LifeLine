@@ -3,28 +3,29 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   StatusBar,
   Platform,
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { router } from 'expo-router';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 export default function PaymentMethodsScreen() {
+  const insets = useSafeAreaInsets();
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      <View style={styles.headerContainer}>
-        <TouchableOpacity
+      <View style={[styles.headerContainer, { paddingTop: insets.top + 16 }]}>
+        <AnimatedPressable
           onPress={() => router.back()}
           style={styles.backButton}
-          activeOpacity={0.7}
         >
           <Ionicons name="arrow-back" size={24} color="#111827" />
-        </TouchableOpacity>
+        </AnimatedPressable>
 
         <Text style={styles.title}>Payment Methods</Text>
         <Text style={styles.subtitle}>Saved Payment methods</Text>
@@ -33,7 +34,7 @@ export default function PaymentMethodsScreen() {
       <View style={styles.headerDivider} />
 
       <View style={styles.contentContainer}>
-        <TouchableOpacity style={styles.card} activeOpacity={0.7}>
+        <AnimatedPressable style={styles.card}>
           <View style={styles.iconContainer}>
             <MaterialCommunityIcons name="credit-card-outline" size={22} color="#64748B" />
           </View>
@@ -41,25 +42,25 @@ export default function PaymentMethodsScreen() {
             <Text style={styles.cardTitle}>Credit/Debit Card</Text>
             <Text style={styles.cardSubtitle}>**** **** 4242</Text>
           </View>
-        </TouchableOpacity>
+        </AnimatedPressable>
 
-        <TouchableOpacity style={styles.card} activeOpacity={0.7}>
+        <AnimatedPressable style={styles.card}>
           <View style={styles.iconContainer}>
             <Octicons name="device-mobile" size={20} color="#64748B" />
           </View>
           <View style={styles.cardInfo}>
             <Text style={styles.cardTitle}>Bank Transfer</Text>
           </View>
-        </TouchableOpacity>
+        </AnimatedPressable>
 
-        <TouchableOpacity style={styles.card} activeOpacity={0.7}>
+        <AnimatedPressable style={styles.card}>
           <View style={styles.iconContainer}>
             <Ionicons name="wallet-outline" size={20} color="#64748B" />
           </View>
           <View style={styles.cardInfo}>
             <Text style={styles.cardTitle}>USSD Code</Text>
           </View>
-        </TouchableOpacity>
+        </AnimatedPressable>
       </View>
     </View>
   );

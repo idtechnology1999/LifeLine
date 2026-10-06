@@ -19,7 +19,7 @@ import Animated, {
   withSequence,
   Easing,
 } from 'react-native-reanimated';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
@@ -29,6 +29,7 @@ export type AuthMode = 'login' | 'signup';
 
 export default function AuthScreen() {
   const insets = useSafeAreaInsets();
+  const { redirectTo } = useLocalSearchParams<{ redirectTo?: string }>();
   const [mode, setMode] = useState<AuthMode>('login');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -76,6 +77,7 @@ export default function AuthScreen() {
         mode,
         name: isSignup ? fullName.trim() : '',
         email: isSignup ? email.trim() : '',
+        ...(redirectTo ? { redirectTo } : {}),
       },
     });
   };

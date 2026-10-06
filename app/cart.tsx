@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native';
 import { Feather, Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
+import AnimatedPressable from '@/components/AnimatedPressable';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 interface CartItem {
   id: string;
@@ -42,9 +43,9 @@ export default function CartScreen() {
   return (
     <View style={[styles.root, { paddingTop: insets.top + 12 }]}>
       <View style={styles.headerRow}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+        <AnimatedPressable onPress={() => router.back()} style={styles.backBtn}>
           <Ionicons name="arrow-back" size={24} color="#111827" />
-        </TouchableOpacity>
+        </AnimatedPressable>
         <View>
           <Text style={styles.headerTitle}>Shopping Cart</Text>
           <Text style={styles.headerSubtitle}>{cartItems.length} items</Text>
@@ -67,25 +68,25 @@ export default function CartScreen() {
                   <View style={styles.itemNameRow}>
                     <Text style={styles.itemName}>{item.name}</Text>
                     {item.showPrescriptionAction && (
-                      <TouchableOpacity activeOpacity={0.7}>
+                      <AnimatedPressable>
                         <Text style={styles.addPrescriptionText}>Add Prescription</Text>
-                      </TouchableOpacity>
+                      </AnimatedPressable>
                     )}
                   </View>
                   <Text style={styles.itemPrice}>{item.price}</Text>
                   <View style={styles.itemActionsRow}>
                     <View style={styles.counterControl}>
-                      <TouchableOpacity style={styles.counterButton} onPress={() => updateQuantity(item.id, -1)} activeOpacity={0.7}>
+                      <AnimatedPressable style={styles.counterButton} onPress={() => updateQuantity(item.id, -1)}>
                         <Feather name="minus" size={14} color="#475569" />
-                      </TouchableOpacity>
+                      </AnimatedPressable>
                       <Text style={styles.quantityValue}>{item.quantity}</Text>
-                      <TouchableOpacity style={styles.counterButton} onPress={() => updateQuantity(item.id, 1)} activeOpacity={0.7}>
+                      <AnimatedPressable style={styles.counterButton} onPress={() => updateQuantity(item.id, 1)}>
                         <Feather name="plus" size={14} color="#475569" />
-                      </TouchableOpacity>
+                      </AnimatedPressable>
                     </View>
-                    <TouchableOpacity onPress={() => removeItem(item.id)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }} activeOpacity={0.7}>
+                    <AnimatedPressable onPress={() => removeItem(item.id)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
                       <Feather name="trash-2" size={18} color="#EF4444" />
-                    </TouchableOpacity>
+                    </AnimatedPressable>
                   </View>
                 </View>
               </View>
@@ -102,9 +103,9 @@ export default function CartScreen() {
               <Text style={styles.addressSubtitle}>Gbagada Lagos</Text>
             </View>
           </View>
-          <TouchableOpacity activeOpacity={0.7}>
+          <AnimatedPressable>
             <Text style={styles.changeAddressText}>Change</Text>
-          </TouchableOpacity>
+          </AnimatedPressable>
         </View>
 
         <View style={styles.summaryContainer}>
@@ -123,9 +124,9 @@ export default function CartScreen() {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.checkoutBtn} activeOpacity={0.85} onPress={() => router.push('/order-secure-payment')}>
+        <AnimatedPressable style={styles.checkoutBtn} onPress={() => router.push('/order-secure-payment')}>
           <Text style={styles.checkoutBtnText}>Proceed to Checkout</Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
       </ScrollView>
     </View>
   );

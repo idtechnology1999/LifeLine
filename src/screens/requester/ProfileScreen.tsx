@@ -11,7 +11,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, MaterialIcons, Feather } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
-const FONT = Platform.select({ ios: 'System', default: 'System' });
+import { FONT } from '@/constants/typography';
 
 const SUBSCRIPTION_STATUS = 'Active';
 
